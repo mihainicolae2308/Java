@@ -137,15 +137,8 @@ public class LibraryCatalog {
     
     
     public static void main(String[] args) {
-        logger.debug("This is a debug message");
-        logger.info("This is an info message");
-        logger.warn("This is a warn message");
-        logger.error("This is an error message");
-        logger.fatal("This is a fatal message");
-        
-        
-        
         HashSet listOfBooks = new HashSet();
+        
         addNovel(listOfBooks, "Star Wars", 232, Novel.TypeOfNovel.SF, 23541);
         addArtAlbum(listOfBooks, "Picasso", 157, ArtAlbum.PaperQuality.HIGH, 54343);
         addArtAlbum(listOfBooks, "Grigorescu", 115, ArtAlbum.PaperQuality.MEDIUM, 98546);

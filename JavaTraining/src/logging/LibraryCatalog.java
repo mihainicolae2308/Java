@@ -5,18 +5,13 @@
  */
 package logging;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.Scanner;
-import java.util.logging.Level;
 
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
@@ -43,7 +38,8 @@ public class LibraryCatalog {
         n.setNumberOfPages(noPages);
         n.setNovelType(typeOfNovel);
         n.setIsbn(isbn);
-        l.add(n);        
+        l.add(n);
+        logger.info("The book '" + name + "' has been created.");
     }
     
     private static void addArtAlbum(HashSet l, String name, int noPages, ArtAlbum.PaperQuality quality, int isbn) {
@@ -53,6 +49,7 @@ public class LibraryCatalog {
         a.setQuality(quality);
         a.setIsbn(isbn);
         l.add(a);
+        logger.info("The book '" + name + "' has been created.");
     }
     
     private static void listBooks(HashSet l) {
@@ -74,7 +71,7 @@ public class LibraryCatalog {
         while (it.hasNext()) {
             Book currentBook = (Book)it.next();
             if (currentBook.getIsbn() == isbn) {
-                logger.info("Removing the book with ISBN= " + currentBook.getIsbn());
+                logger.warn("Removing the book with ISBN= " + currentBook.getIsbn());
                 it.remove();
             }          
         }
@@ -89,6 +86,7 @@ public class LibraryCatalog {
         while (it.hasNext()) {
             Book currentBook = (Book)it.next();
             fw.write(currentBook.getName() + ", " + currentBook.getNumberOfPages() + " pages\n");
+            logger.info("The book '" + currentBook.getName() + "' has been added to catalog.");
         }
         fw.close();
         } catch (IOException ex) {
@@ -110,15 +108,16 @@ public class LibraryCatalog {
                 String line = scanner.nextLine();
                 if (line.contains(title) || line.toLowerCase().contains(title)) {
                     System.out.println("The book '" + line.split(",")[0] + "' has been found");
+                    logger.info("The book '" + line.split(",")[0] + "' has been found");
                     bookFound = true;
                 }
             }
             if (bookFound == false) {   
-                throw new NotExistingBook("Required book didn't exist in our bookstore.");
+                throw new NotExistingBook("Required book didn't exist in our bookstore. Searched item: " + title);
             }
             
         } catch (FileNotFoundException ex) {
-            logger.fatal("The file has not been found");
+            logger.error("The file has not been found");
         }
         
 //Another possible implementation with FileReader and BufferedReader
@@ -152,6 +151,12 @@ public class LibraryCatalog {
         addArtAlbum(listOfBooks, "Grigorescu", 115, ArtAlbum.PaperQuality.MEDIUM, 98546);
         addNovel(listOfBooks, "Codul lui Da Vinci", 313, Novel.TypeOfNovel.MYSTERY, 50080);
         addNovel(listOfBooks, "Life of Picasso", 213, Novel.TypeOfNovel.ROMANCE, 55113);
+        addArtAlbum(listOfBooks, "Van Gogh Paintings", 202, ArtAlbum.PaperQuality.HIGH, 22334);
+        addArtAlbum(listOfBooks, "Rembrandt", 122, ArtAlbum.PaperQuality.MEDIUM, 32419);
+        addNovel(listOfBooks, "Ingeri si demoni", 413, Novel.TypeOfNovel.MYSTERY, 52380);
+        addNovel(listOfBooks, "Cel mai iubit dintre pamanteni", 213, Novel.TypeOfNovel.ROMANCE, 25113);
+        addArtAlbum(listOfBooks, "Pictori impresionisti", 322, ArtAlbum.PaperQuality.MEDIUM, 15419);
+        addNovel(listOfBooks, "Back to the future", 301, Novel.TypeOfNovel.SF, 34320);
         
         System.out.println("List of books:");
         listBooks(listOfBooks);
@@ -166,6 +171,12 @@ public class LibraryCatalog {
         
         try {
             searchBook(f, "picasso");  
+        } catch (NotExistingBook ex) {
+            logger.error(ex.getMessage());
+        }
+        
+        try {
+            searchBook(f, "Ion");  
         } catch (NotExistingBook ex) {
             logger.error(ex.getMessage());
         }

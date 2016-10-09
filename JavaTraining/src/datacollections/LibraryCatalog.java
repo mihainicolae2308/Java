@@ -5,17 +5,10 @@
  */
 package datacollections;
 
-import logging.*;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Scanner;
-import java.util.logging.Level;
 
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
@@ -25,12 +18,6 @@ import org.apache.logging.log4j.LogManager;
  *
  * @author mnicolae
  */
-class NotExistingBook extends Exception {
-
-        public NotExistingBook(String message) {
-            super(message);
-        }
-    }
 
 class InvalidEvaluation extends Exception {
 

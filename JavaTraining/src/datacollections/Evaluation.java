@@ -13,7 +13,7 @@ import logging.*;
  */
 public class Evaluation {
     
-    private float stars;
+    private double stars;
     
     private int user_id;
     
@@ -62,7 +62,7 @@ public class Evaluation {
      *
      * @return the value of stars
      */
-    public float getStars() {
+    public double getStars() {
         return stars;
     }
 
@@ -71,7 +71,7 @@ public class Evaluation {
      *
      * @param stars new value of stars
      */
-    public void setStars(float stars) {
+    public void setStars(double stars) {
         this.stars = stars;
     }
 

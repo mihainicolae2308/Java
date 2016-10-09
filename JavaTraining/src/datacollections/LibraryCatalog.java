@@ -13,7 +13,9 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.logging.Level;
 
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
@@ -61,7 +63,7 @@ public class LibraryCatalog {
         logger.info("The book '" + name + "' has been created.");
     }
     
-    private static void addEvaluation(HashMap hm, Book b, float stars, int user_id, StringBuilder description) throws InvalidEvaluation {
+    private static void addEvaluation(HashMap hm, Book b, double stars, int user_id, StringBuilder description) throws InvalidEvaluation {
         if (stars < 1 || stars > 5 || stars%0.5 != 0.0) {
             throw new InvalidEvaluation("The stars must be between 1 and 5 and multiple of 0.5");
         } else {
@@ -83,7 +85,86 @@ public class LibraryCatalog {
             
     private static void addBookEvaluationToHashMap(HashMap hm, Book b, Evaluation ev) {
         hm.put(ev, b);
-    }        
+    } 
+    
+    private static void assignEvaluationsToBooks (HashSet hs, HashMap hm) {
+        StringBuilder sb1 = new StringBuilder("Very good book.");
+        StringBuilder sb2 = new StringBuilder("Good and entertaining book.");
+        StringBuilder sb3 = new StringBuilder("Mind blowing.");
+        StringBuilder sb4 = new StringBuilder("Interesting.");
+        StringBuilder sb5 = new StringBuilder("Not so good as I expected.");
+        StringBuilder sb6 = new StringBuilder("Very boring.");
+        StringBuilder sb7 = new StringBuilder("Too many details and not so much action.");
+        
+        for (Object book : hs) {
+            Book currentBook = (Book)book;
+            if ("Star Wars".equals(currentBook.getName())) {
+                try {
+                    addEvaluation(hm, currentBook, 4.1, 1202, sb1);
+                } catch (InvalidEvaluation ex) {
+                    logger.error(ex.getMessage());
+                    System.out.println("Invalid evaluation: " + ex.getMessage());
+                }
+                try {
+                    addEvaluation(hm, currentBook, 4.5, 1205, sb1);
+                } catch (InvalidEvaluation ex) {
+                    logger.error(ex.getMessage());
+                    System.out.println("Invalid evaluation: " + ex.getMessage());
+                }
+                
+                try {
+                    addEvaluation(hm, currentBook, 5.0, 2014, sb3);
+                } catch (InvalidEvaluation ex) {
+                    logger.error(ex.getMessage());
+                    System.out.println("Invalid evaluation: " + ex.getMessage());
+                }
+            }
+            if ("Rembrandt".equals(currentBook.getName())) {
+                try {
+                    addEvaluation(hm, currentBook, 3.5, 1202, sb4);
+                } catch (InvalidEvaluation ex) {
+                    logger.error(ex.getMessage());
+                    System.out.println("Invalid evaluation: " + ex.getMessage());
+                }
+            
+                try {
+                    addEvaluation(hm, currentBook, 3.5, 10001, sb4);
+                } catch (InvalidEvaluation ex) {
+                    logger.error(ex.getMessage());
+                    System.out.println("Invalid evaluation: " + ex.getMessage());
+                }
+                
+                try {
+                    addEvaluation(hm, currentBook, 1.0, 2014, sb6);
+                } catch (InvalidEvaluation ex) {
+                    logger.error(ex.getMessage());
+                    System.out.println("Invalid evaluation: " + ex.getMessage());
+                }
+            }
+            if ("Ingeri si demoni".equals(currentBook.getName())) {
+                try {
+                    addEvaluation(hm, currentBook, 5.0, 3301, sb3);
+                } catch (InvalidEvaluation ex) {
+                    logger.error(ex.getMessage());
+                    System.out.println("Invalid evaluation: " + ex.getMessage());
+                }
+            
+                try {
+                    addEvaluation(hm, currentBook, 4.0, 2014, sb2);
+                } catch (InvalidEvaluation ex) {
+                    logger.error(ex.getMessage());
+                    System.out.println("Invalid evaluation: " + ex.getMessage());
+                }
+            }
+            if ("Cel mai iubit dintre pamanteni".equals(currentBook.getName()))
+                try {
+                    addEvaluation(hm, currentBook, 2.5, 1202, sb7);
+                } catch (InvalidEvaluation ex) {
+                    logger.error(ex.getMessage());
+                    System.out.println("Invalid evaluation: " + ex.getMessage());
+                }
+        }
+    } 
     
     private static void listBooks(HashSet l) {
         Iterator it = l.iterator();
@@ -91,82 +172,19 @@ public class LibraryCatalog {
             Book currentBook = (Book)it.next();
             System.out.println(currentBook.getName());          
         }
-        
-//Another implementation using "for each" loop, left in the code as example for learning purposes
-//        for (Object book : l) {
-//            Book currentBook = (Book)book;
-//            System.out.println(currentBook.getName());
-//        }
     }
     
-    private static void removeBook(HashSet l, int isbn) {
-        Iterator it = l.iterator();
-        while (it.hasNext()) {
-            Book currentBook = (Book)it.next();
-            if (currentBook.getIsbn() == isbn) {
-                logger.warn("Removing the book with ISBN= " + currentBook.getIsbn());
-                it.remove();
-            }          
+    private static void listEvaluations(HashMap hm) {
+        Iterator it = hm.entrySet().iterator();
+        while(it.hasNext()) {
+            Map.Entry entry = (Map.Entry)it.next();
+            Evaluation currentEvaluation = (Evaluation)entry.getKey();
+            Book currentBook = (Book)entry.getValue();
+            System.out.println(currentEvaluation.getStars() + " stars, evaluated by " + currentEvaluation.getUser_id() + ", " +
+                    currentEvaluation.getDescription() + " For book: " + currentBook.getName());
         }
     }
-    
-    private static void addBooksToFile(File f, HashSet l) {
-        FileWriter fw;
-        try {
-            fw = new FileWriter(f);
         
-        Iterator it = l.iterator();
-        while (it.hasNext()) {
-            Book currentBook = (Book)it.next();
-            fw.write(currentBook.getName() + ", " + currentBook.getNumberOfPages() + " pages\n");
-            logger.info("The book '" + currentBook.getName() + "' has been added to catalog.");
-        }
-        fw.close();
-        } catch (IOException ex) {
-            logger.error("There was a problem opening the file for writing");
-        }
-    }
-            
-    
-    
-    private static void searchBook(File f, String title) throws NotExistingBook {
-        Scanner scanner;
-        try {
-            scanner = new Scanner(f);
-        
-//Parsing the file contents line by line:        
-        
-            boolean bookFound = false;
-            while (scanner.hasNextLine()) {
-                String line = scanner.nextLine();
-                if (line.contains(title) || line.toLowerCase().contains(title)) {
-                    System.out.println("The book '" + line.split(",")[0] + "' has been found");
-                    logger.info("The book '" + line.split(",")[0] + "' has been found");
-                    bookFound = true;
-                }
-            }
-            if (bookFound == false) {   
-                throw new NotExistingBook("Required book didn't exist in our bookstore. Searched item: " + title);
-            }
-            
-        } catch (FileNotFoundException ex) {
-            logger.error("The file has not been found");
-        }
-        
-//Another possible implementation with FileReader and BufferedReader
-//This code is left here just for learning purposes
-        
-//        FileReader fr = new FileReader(f);
-//        BufferedReader br = new BufferedReader(fr);
-//        
-//        String line = br.readLine();
-//        while (line != null) {
-//            line = br.readLine();
-//            if (line.contains(title) || line.toLowerCase().contains(title)) {
-//                System.out.println("Exista");
-//            }
-//        } 
-    }
     
     
     public static void main(String[] args) {
@@ -175,39 +193,17 @@ public class LibraryCatalog {
         HashMap<Evaluation, Book> soldBooks = new HashMap();
         
         addNovel(listOfBooks, "Star Wars", 232, Novel.TypeOfNovel.SF, 23541);
-        addArtAlbum(listOfBooks, "Picasso", 157, ArtAlbum.PaperQuality.HIGH, 54343);
-        addArtAlbum(listOfBooks, "Grigorescu", 115, ArtAlbum.PaperQuality.MEDIUM, 98546);
-        addNovel(listOfBooks, "Codul lui Da Vinci", 313, Novel.TypeOfNovel.MYSTERY, 50080);
-        addNovel(listOfBooks, "Life of Picasso", 213, Novel.TypeOfNovel.ROMANCE, 55113);
-        addArtAlbum(listOfBooks, "Van Gogh Paintings", 202, ArtAlbum.PaperQuality.HIGH, 22334);
         addArtAlbum(listOfBooks, "Rembrandt", 122, ArtAlbum.PaperQuality.MEDIUM, 32419);
         addNovel(listOfBooks, "Ingeri si demoni", 413, Novel.TypeOfNovel.MYSTERY, 52380);
         addNovel(listOfBooks, "Cel mai iubit dintre pamanteni", 213, Novel.TypeOfNovel.ROMANCE, 25113);
-        addArtAlbum(listOfBooks, "Pictori impresionisti", 322, ArtAlbum.PaperQuality.MEDIUM, 15419);
-        addNovel(listOfBooks, "Back to the future", 301, Novel.TypeOfNovel.SF, 34320);
-        
+               
         System.out.println("List of books:");
         listBooks(listOfBooks);
-        System.out.println("Removing one book from the list");
-        removeBook(listOfBooks, 50080);
-        System.out.println("The updated list:");
-        listBooks(listOfBooks);
-
-        File f = new File("bookstore.txt");
         
-        addBooksToFile(f, listOfBooks);
+        assignEvaluationsToBooks(listOfBooks, soldBooks);
+        listEvaluations(soldBooks);
         
-        try {
-            searchBook(f, "picasso");  
-        } catch (NotExistingBook ex) {
-            logger.error(ex.getMessage());
-        }
-        
-        try {
-            searchBook(f, "Ion");  
-        } catch (NotExistingBook ex) {
-            logger.error(ex.getMessage());
-        }
     }
-    
+
+      
 }

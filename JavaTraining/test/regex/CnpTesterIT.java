@@ -37,18 +37,7 @@ public class CnpTesterIT {
     public void tearDown() {
     }
 
-    /**
-     * Test of main method, of class CnpTester.
-     */
-//    @Test
-//    public void testMain() {
-//        System.out.println("main");
-//        String[] args = null;
-//        CnpTester.main(null);
-//        // TODO review the generated test code and remove the default call to fail.
-//        //fail("The test case is a prototype.");
-//    }
-
+    
     /**
      * Tests of extraDateValidation method, of class CnpTester.
      */
@@ -61,8 +50,6 @@ public class CnpTesterIT {
         boolean expResult = true;
         boolean result = CnpTester.extraDateValidation(cnp);
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        //fail("The test case is a prototype.");
     }
     //Test with 31-06 (invalid date)
     @Test
@@ -72,8 +59,6 @@ public class CnpTesterIT {
         boolean expResult = false;
         boolean result = CnpTester.extraDateValidation(cnp);
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        //fail("The test case is a prototype.");
     }
     
     //Test with 30-02 (invalid date)
@@ -84,8 +69,6 @@ public class CnpTesterIT {
         boolean expResult = false;
         boolean result = CnpTester.extraDateValidation(cnp);
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        //fail("The test case is a prototype.");
     }
     
 

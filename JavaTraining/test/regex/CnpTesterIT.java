@@ -128,6 +128,5 @@ public class CnpTesterIT {
         boolean expResult = false;
         boolean result = CnpTester.testCnp(regex, cnp);
         assertEquals(expResult, result);
-    }
-    
+    }    
 }

@@ -36,11 +36,7 @@ public class CnpTester {
         Matcher matcher = pattern.matcher(cnp);
         boolean isMonthLengthCorrect = extraDateValidation(cnp);
         // verify if the inserted CNP matches the regular expresion and the correct month length verified by extraDateValidation() method
-        if (matcher.matches() && isMonthLengthCorrect) {
-            return true;
-        } else {
-            return false;
-        }
+        return matcher.matches() && isMonthLengthCorrect;
     }
     
     public static void main(String[] args) {

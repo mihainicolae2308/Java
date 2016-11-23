@@ -62,17 +62,5 @@ public class DatabaseOperations {
         System.out.println(sqlCommand);
         st.execute(sqlCommand);
     }
-
     
-  
-//    
-//        
-//    connection = DriverManager.getConnection(url, user, password);
-//    statement = connection.createStatement();
-//
-//    public DatabaseOperations() throws ClassNotFoundException {
-//        this.driverClass = Class.forName(driver);
-//    }
-   
-
 }
